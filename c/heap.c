@@ -58,8 +58,10 @@ void heap_push(heap *h, void *value) {
 
 int heap_pop(heap *h, void *dst) {
     if (h->top >= 0) {
-        if (dst) byte_copy(dst, array_get(h->arr, 0), h->arr->es);
-        byte_copy(array_get(h->arr, 0), array_get(h->arr, h->top), h->arr->es);
+//        if (dst) byte_copy(dst, array_get(h->arr, 0), h->arr->element_size);
+        if (dst) array_copy_item(h->arr, 0, dst);
+//        byte_copy(array_get(h->arr, 0), array_get(h->arr, h->top), h->arr->element_size);
+        array_copy_item(h->arr, h->top, array_get(h->arr, 0));
         h->top--;
         heap_percolate_up(h, 0);
         return 1;
@@ -67,16 +69,17 @@ int heap_pop(heap *h, void *dst) {
     return 0;
 }
 
-void heap_replace(heap *h, int idx, void *value, void *dst) {
-    if (dst) byte_copy(dst, array_get(h->arr, idx), h->arr->es);
-    array_set(h->arr, idx, value);
-    heap_percolate_up(h, idx);
+void heap_replace(heap *h, int index, void *value, void *dst) {
+//    if (dst) byte_copy(dst, array_get(h->arr, idx), h->arr->element_size);
+    if (dst) array_copy_item(h->arr, index, dst);
+    array_set(h->arr, index, value);
+    heap_percolate_up(h, index);
 }
 
-int heap_delete(heap *h, int idx) {
-    if (idx >= 0 && idx <= h->top) {
+int heap_delete(heap *h, int index) {
+    if (index >= 0 && index <= h->top) {
         h->top--;
-        heap_replace(h, idx, array_get(h->arr, h->top + 1), 0);
+        heap_replace(h, index, array_get(h->arr, h->top + 1), 0);
         return 1;
     }
     return 0;

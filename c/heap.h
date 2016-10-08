@@ -3,6 +3,8 @@
 
 #include "array.h"
 
+/* Binary heap structure
+ */
 typedef struct heap {
     int top;
     array *arr;
@@ -20,9 +22,9 @@ void heap_push(heap *h, void *value);
 
 int heap_pop(heap *h, void *dst);
 
-void heap_replace(heap *h, int idx, void *value, void *dst);
+void heap_replace(heap *h, int index, void *value, void *dst);
 
-int heap_delete(heap *h, int idx);
+int heap_delete(heap *h, int index);
 
 int heap_find(heap *h, int (*iterator)(void *element, void *context), void *context);
 
