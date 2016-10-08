@@ -13,10 +13,16 @@ void array_free(array *a) {
     free(a);
 }
 
-void array_set(array *a, int idx, void *item) {
+void array_resize(array *a, int size) {
+    
+}
+
+int array_set(array *a, int idx, void *item) {
     if (idx < a->capacity) {
         byte_copy(a->data + idx * a->es, item, a->es);
+        return 1;
     }
+    return 0;
 }
 
 void *array_get(array *a, int index) {
