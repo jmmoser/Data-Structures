@@ -3,6 +3,8 @@
 
 #include "array.h"
 
+/* Circular buffer structure
+*/
 typedef struct ring {
     array *arr;
     int count;

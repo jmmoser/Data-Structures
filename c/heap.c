@@ -58,9 +58,7 @@ void heap_push(heap *h, void *value) {
 
 int heap_pop(heap *h, void *dst) {
     if (h->top >= 0) {
-//        if (dst) byte_copy(dst, array_get(h->arr, 0), h->arr->element_size);
         if (dst) array_copy_item(h->arr, 0, dst);
-//        byte_copy(array_get(h->arr, 0), array_get(h->arr, h->top), h->arr->element_size);
         array_copy_item(h->arr, h->top, array_get(h->arr, 0));
         h->top--;
         heap_percolate_up(h, 0);
@@ -70,7 +68,6 @@ int heap_pop(heap *h, void *dst) {
 }
 
 void heap_replace(heap *h, int index, void *value, void *dst) {
-//    if (dst) byte_copy(dst, array_get(h->arr, idx), h->arr->element_size);
     if (dst) array_copy_item(h->arr, index, dst);
     array_set(h->arr, index, value);
     heap_percolate_up(h, index);
