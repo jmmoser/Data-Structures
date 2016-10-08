@@ -1,9 +1,12 @@
 #include "ring.h"
 
-void ring_handle_change(ring *r, int *indexer, int count_change) {
+int ring_operation(ring *r, void *item, int(*arr_op)(array*,int,void*), int *indexer, int count_change) {
+    int result = 1;
+    if (item) result = arr_op(r->arr, *indexer, item);
     (*indexer)++;
     *indexer = *indexer == r->arr->capacity ? 0 : *indexer;
     r->count += count_change;
+    return result;
 }
 
 ring *ring_create(int capacity, int element_size) {
@@ -21,19 +24,17 @@ void ring_free(ring *r) {
 }
 
 int ring_push(ring *r, void *item) {
-    int result = 0;
-    if (item && r->count < r->arr->capacity) {
-        result = array_set(r->arr, r->head, item);
-        ring_handle_change(r, &r->head, 1);
+    if (r->count < r->arr->capacity) {
+        return ring_operation(r, item, array_set, &r->head, 1);
     }
-    return result;
+    return 0;
 }
 
 int ring_pop(ring *r, void *item) {
-    int result = 0;
-    if (item && r->count > 0) {
-        result = array_copy_item(r->arr, r->tail, item);
-        ring_handle_change(r, &r->tail, -1);
+    if (r->count > 0) {
+        return ring_operation(r, item, array_copy_item, &r->tail, -1);
     }
-    return result;
+    return 0;
 }
+
+
