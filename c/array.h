@@ -3,9 +3,11 @@
 
 #include "byte.h"
 
+/* Generic array structure
+ */
 typedef struct array {
     void *data;
-    int es;
+    int element_size;
     int capacity;
 } array;
 
@@ -21,6 +23,6 @@ void *array_get(array *a, int index);
 
 int array_copy_item(array *a, int index, void *item);
 
-void array_swap(array *a, int index1, int index2);
+int array_swap(array *a, int index1, int index2);
 
 #endif
