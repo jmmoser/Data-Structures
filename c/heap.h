@@ -14,7 +14,8 @@ typedef struct heap {
 /* For a min-heap the comparator should return 1 if a < b and -1 if a > b.
  * For a max-heap the comparator should return 1 if a > b and -1 if a < b.
  */
-heap *heap_create(int capacity, int element_size, int (*comparator)(void *a,void *b));
+//heap *heap_create(int capacity, int element_size, int (*comparator)(void *a,void *b));
+heap *heap_create(int capacity, int element_size, int (*comparator)(void*,void*), void (*deallocator)(void *));
 
 void heap_free(heap *h);
 

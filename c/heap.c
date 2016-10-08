@@ -12,10 +12,10 @@ int heap_right(int idx) {
     return (idx + 1) << 1;
 }
 
-heap *heap_create(int capacity, int element_size, int (*comparator)(void*,void*)) {
+heap *heap_create(int capacity, int element_size, int (*comparator)(void*,void*), void (*deallocator)(void *)) {
     heap *h = malloc(sizeof(heap));
     h->top = -1;
-    h->arr = array_create(capacity, element_size);
+    h->arr = array_create(capacity, element_size, deallocator);
     h->comparator = comparator;
     return h;
 }

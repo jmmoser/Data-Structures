@@ -9,9 +9,10 @@ typedef struct array {
     void *data;
     int element_size;
     int capacity;
+    void (*deallocator)(void *);
 } array;
 
-array *array_create(int capacity, int element_size);
+array *array_create(int capacity, int element_size, void (*deallocator)(void *));
 
 void array_free(array *a);
 

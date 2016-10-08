@@ -13,7 +13,8 @@ typedef struct ring {
     int tail;
 } ring;
 
-ring *ring_create(int capacity, int element_size);
+//ring *ring_create(int capacity, int element_size);
+ring *ring_create(int capacity, int element_size, void(*deallocator)(void *));
 
 void ring_free(ring *r);
 
