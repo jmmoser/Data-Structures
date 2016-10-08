@@ -13,8 +13,10 @@ void array_free(array *a) {
     free(a);
 }
 
-void array_resize(array *a, int size) {
-    
+int array_resize(array *a, int capacity) {
+    a->capacity = capacity;
+    a->data = realloc(size * capacity);
+    return a->data != 0;
 }
 
 int array_set(array *a, int idx, void *item) {
