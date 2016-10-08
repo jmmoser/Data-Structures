@@ -22,12 +22,12 @@ void heap_push(heap *h, void *value);
 
 int heap_pop(heap *h, void *dst);
 
+void *heap_peak(heap *h);
+
 void heap_replace(heap *h, int index, void *value, void *dst);
 
 int heap_delete(heap *h, int index);
 
 int heap_find(heap *h, int (*iterator)(void *element, void *context), void *context);
-
-void *heap_peak(heap *h);
 
 #endif
