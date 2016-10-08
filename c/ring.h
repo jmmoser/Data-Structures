@@ -1,5 +1,5 @@
-#ifndef heap_h
-#define heap_h
+#ifndef ring_h
+#define ring_h
 
 #include "array.h"
 
@@ -14,5 +14,9 @@ typedef struct ring {
 ring *ring_create(int capacity, int element_size);
 
 void ring_free(ring *r);
+
+int ring_push(ring *r, void *item);
+
+int ring_pop(ring *r, void *item);
 
 #endif

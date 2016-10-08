@@ -15,7 +15,7 @@ void array_free(array *a) {
 
 int array_resize(array *a, int capacity) {
     a->capacity = capacity;
-    a->data = realloc(size * capacity);
+    a->data = realloc(a->data, capacity * a->es);
     return a->data != 0;
 }
 
@@ -36,7 +36,7 @@ void *array_get(array *a, int index) {
 
 int array_copy_item(array *a, int index, void *item) {
     if (item && index < a->capacity)
-        byte_copy(item, array_get(index), a->element_size);
+        byte_copy(item, array_get(a, index), a->es);
         return 1;
     
     return 0;
