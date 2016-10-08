@@ -14,7 +14,7 @@ void byte_swap(char *s1, char *s2, int count) {
     }
 }
 
-int byte_cmp(char *s1, char *s2, int count) {
+int byte_compare(char *s1, char *s2, int count) {
     for (int i = 0; i < count; i++)
         if (s1[i] != s2[i]) return 0;
     return 1;
