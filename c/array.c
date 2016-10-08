@@ -34,6 +34,14 @@ void *array_get(array *a, int index) {
     return 0;
 }
 
+int array_copy_item(array *a, int index, void *item) {
+    if (item && index < a->capacity)
+        byte_copy(item, array_get(index), a->element_size);
+        return 1;
+    
+    return 0;
+}
+
 void array_swap(array *a, int idx1, int idx2) {
     if (idx1 != idx2 && idx1 < a->capacity && idx2 < a->capacity) {
         byte_swap(a->data + idx1 * a->es, a->data + idx2 * a->es, a->es);

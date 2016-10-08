@@ -15,10 +15,12 @@ void array_free(array *a);
 
 int array_resize(array *a, int capacity);
 
-int array_set(array *a, int idx, void *item);
+int array_set(array *a, int index, void *item);
 
 void *array_get(array *a, int index);
 
-void array_swap(array *a, int idx1, int idx2);
+int array_copy_item(array *a, int index, void *item);
+
+void array_swap(array *a, int index1, int index2);
 
 #endif
