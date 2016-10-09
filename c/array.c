@@ -10,20 +10,10 @@ void array_zero(array *a, int start, int end) {
     }
 }
 
-//array *array_create(int capacity, int element_size) {
-//    array *a = malloc(sizeof(array));
-//    a->capacity = capacity;
-//    a->element_size = element_size;
-//    a->data = malloc(capacity * element_size);
-//    return a;
-//}
-
 array *array_create(int capacity, int element_size, void (*deallocator)(void *)) {
     array *a = malloc(sizeof(array));
-//    a->capacity = capacity;
     a->capacity = 0;
     a->element_size = element_size;
-//    a->data = malloc(capacity * element_size);
     a->deallocator = deallocator;
     array_resize(a, capacity);
     return a;

@@ -6,7 +6,7 @@
 /* Hash table structure
  */
 typedef struct dictionary {
-    array *arr;
+    array *array;
     int (*hash_function)(char *);
 } dictionary;
 

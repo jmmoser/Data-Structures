@@ -7,7 +7,8 @@ list_node *list_node_create(void *value, int element_size, void (*deallocator)(v
     node->next = 0;
     node->previous = 0;
     node->value = malloc(element_size);
-    byte_copy(node->value, value, element_size);
+    memcpy(node->value, value, element_size);
+//    byte_copy(node->value, value, element_size);
     return node;
 }
 
