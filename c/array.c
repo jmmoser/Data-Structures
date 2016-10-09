@@ -60,9 +60,10 @@ void *array_get(array *a, int index) {
 }
 
 int array_copy_item(array *a, int index, void *item) {
-    if (item && index < a->capacity)
+    if (item && index < a->capacity) {
         memcpy(item, array_get(a, index), a->element_size);
         return 1;
+    }
     
     return 0;
 }
