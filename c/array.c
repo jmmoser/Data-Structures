@@ -56,7 +56,7 @@ int array_set(array *a, int index, void *item) {
         if (a->deallocator && dst) {
             a->deallocator(dst);
         }
-        byte_copy(dst, item, a->element_size);
+        memcpy(dst, item, a->element_size);
         return 1;
     }
     return 0;
@@ -71,7 +71,7 @@ void *array_get(array *a, int index) {
 
 int array_copy_item(array *a, int index, void *item) {
     if (item && index < a->capacity)
-        byte_copy(item, array_get(a, index), a->element_size);
+        memcpy(item, array_get(a, index), a->element_size);
         return 1;
     
     return 0;

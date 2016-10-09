@@ -26,4 +26,9 @@ int array_copy_item(array *a, int index, void *item);
 
 int array_swap(array *a, int index1, int index2);
 
+typedef struct array_iterator {
+    array *a;
+    
+} array_iterator;
+
 #endif
