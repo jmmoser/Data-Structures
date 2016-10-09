@@ -63,10 +63,7 @@ int list_add(list *l, int index, void *value, int element_size, void (*deallocat
             
             new_node->next = node;
             new_node->previous = node->previous;
-            
-            if (node->previous) {
-                node->previous->next = new_node;
-            }
+            if (node->previous) node->previous->next = new_node;
             node->previous = new_node;
         } else {
             
@@ -82,11 +79,7 @@ int list_add(list *l, int index, void *value, int element_size, void (*deallocat
             
             new_node->next = node->next;
             new_node->previous = node;
-            
-            if (node->next) {
-                node->next->previous = new_node;
-            }
-            
+            if (node->next) node->next->previous = new_node;
             node->next = new_node;
         }
     } else {
@@ -94,32 +87,38 @@ int list_add(list *l, int index, void *value, int element_size, void (*deallocat
         l->tail = new_node;
     }
     
-    
-    
     return 1;
 }
 
 int list_remove(list *l, int index) {
-    list_node *node = l->head;
-    
-    if (index < 0 && l->tail) {
+    int actual_index;
+    if (l->count > 0) {
         
+        index %= l->count;
+        actual_index = index >= 0 ? index : l->count + index;
+        
+        list_node *node = 0;
+        
+        for (list_iterator i = list_get_iterator(l, index < 0); i.index >= 0; list_iterator_next(&i)) {
+            if (i.index == actual_index) {
+                node = i.node;
+                break;
+            }
+        }
+        
+        if (node) {
+            if (node->previous) node->previous->next = node->next;
+            if (node->next) node->next->previous = node->previous;
+            if (node == l->head) l->head = node->next;
+            if (node == l->tail) l->tail = node->previous;
+            
+            list_node_free(node);
+            l->count--;
+            return 1;
+        }
     }
-    
     return 0;
 }
-
-//void list_iterate(list *l, int reverse, int (*iterator)(int index, void *value)) {
-//    if (iterator) {
-//        list_node *node = l->head;
-//        int index = 0;
-//        while (node) {
-//            iterator(index, node->value);
-//            node = node->next;
-//            index++;
-//        }
-//    }
-//}
 
 list_iterator list_get_iterator(list *l, int reverse) {
     list_iterator iterator;
