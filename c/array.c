@@ -52,7 +52,11 @@ int array_resize(array *a, int capacity) {
 
 int array_set(array *a, int index, void *item) {
     if (index < a->capacity) {
-        byte_copy(array_get(a, index), item, a->element_size);
+        void *dst = array_get(a, index);
+        if (a->deallocator && dst) {
+            a->deallocator(dst);
+        }
+        byte_copy(dst, item, a->element_size);
         return 1;
     }
     return 0;
