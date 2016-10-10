@@ -2,6 +2,8 @@
 #include "list.h"
 #include <limits.h>
 
+#include <stdio.h>
+
 typedef struct dictionary_entry {
     char *key;
     int element_size;
@@ -28,27 +30,29 @@ void dictionary_entry_free(dictionary_entry *entry) {
     free(entry);
 }
 
+
+
 int dictionary_default_hash_function(dictionary *d, char *key) {
     unsigned long int hash;
     int i = 0;
     unsigned int len = (unsigned int)strlen(key);
     
     while (hash < ULONG_MAX && i < len) {
-        hash = hash << 8;
+        hash <<= 8;
         hash += key[i];
         i++;
     }
     
-    return hash % d->array->capacity;
+//    printf("FUNC: %s, %i: %lu\n",key, i, (unsigned long)(hash) % (unsigned long)d->array->capacity);
+//    printf("FUNC: %s, %i: %i\n",key, i, (int)((unsigned long)(hash) % (int)d->array->capacity));
+
+    printf("%s: %i\n", key, (int)((unsigned long)hash % (unsigned long)d->array->capacity));
+    
+//    return (unsigned long)hash % (int)d->array->capacity;
+    return (int)((unsigned long)hash % (unsigned long)d->array->capacity);
 }
 
 void dictionary_entry_deallocator(void *item) {
-//    dictionary_entry *entry = *(dictionary_entry **)item;
-//    free(entry->key);
-//    if (entry->deallocator) {
-//        entry->deallocator(entry->value);
-//    }
-//    free(entry);
     dictionary_entry_free(*(dictionary_entry **)item);
 }
 
@@ -70,7 +74,8 @@ void dictionary_free(dictionary *d) {
 
 int dictionary_set(dictionary *d, char *key, void *value, int element_size, void(*deallocator)(void *)) {
     if (key) {
-        int hash = d->hash_function(d, key);
+        int hash = (d->hash_function)(d, key);
+        printf("%s: %i\n", key, (int)hash);
         list *l = *(list **)array_get(d->array, hash);
         if (!l) {
             l = list_create();
@@ -99,7 +104,7 @@ int dictionary_set(dictionary *d, char *key, void *value, int element_size, void
 }
 
 void *dictionary_get(dictionary *d, char *key) {
-    int hash = d->hash_function(d, key);
+    int hash = (d->hash_function)(d, key);
     
     list *l = *(list **)array_get(d->array, hash);
     
