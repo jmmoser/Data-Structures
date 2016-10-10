@@ -5,10 +5,10 @@
 
 typedef struct list_node {
     int element_size;
-    void *value;
     void (*deallocator)(void *);
     struct list_node *next;
     struct list_node *previous;
+    void *value;
 } list_node;
 
 /* Doubly linked list structure

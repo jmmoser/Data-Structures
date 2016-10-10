@@ -6,10 +6,10 @@
 /* Generic array structure
  */
 typedef struct array {
-    void *data;
     int element_size;
     int capacity;
     void (*deallocator)(void *);
+    void *data;
 } array;
 
 array *array_create(int capacity, int element_size, void (*deallocator)(void *));
