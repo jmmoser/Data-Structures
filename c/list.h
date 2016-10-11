@@ -1,8 +1,6 @@
 #ifndef list_h
 #define list_h
 
-#include "byte.h"
-
 typedef struct list_node {
     int element_size;
     void (*deallocator)(void *);

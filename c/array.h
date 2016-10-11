@@ -1,8 +1,6 @@
 #ifndef array_h
 #define array_h
 
-#include "byte.h"
-
 /* Generic array structure
  */
 typedef struct array {
