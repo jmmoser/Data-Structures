@@ -31,25 +31,18 @@ void dictionary_entry_free(dictionary_entry *entry) {
 }
 
 
-
+/* dbj2: http://www.cse.yorku.ca/~oz/hash.html
+ */
 int dictionary_default_hash_function(dictionary *d, char *key) {
-    unsigned long int hash;
-    int i = 0;
-    unsigned int len = (unsigned int)strlen(key);
+    unsigned long int hash = 5381;
     
-    while (hash < ULONG_MAX && i < len) {
-        hash <<= 8;
-        hash += key[i];
-        i++;
+    int c;
+    
+    while ((c = *key++)) {
+        hash = ((hash << 5) + hash) + c;
     }
     
-//    printf("FUNC: %s, %i: %lu\n",key, i, (unsigned long)(hash) % (unsigned long)d->array->capacity);
-//    printf("FUNC: %s, %i: %i\n",key, i, (int)((unsigned long)(hash) % (int)d->array->capacity));
-
-    printf("%s: %i\n", key, (int)((unsigned long)hash % (unsigned long)d->array->capacity));
-    
-//    return (unsigned long)hash % (int)d->array->capacity;
-    return (int)((unsigned long)hash % (unsigned long)d->array->capacity);
+    return hash % d->array->capacity;
 }
 
 void dictionary_entry_deallocator(void *item) {
@@ -74,8 +67,8 @@ void dictionary_free(dictionary *d) {
 
 int dictionary_set(dictionary *d, char *key, void *value, int element_size, void(*deallocator)(void *)) {
     if (key) {
-        int hash = (d->hash_function)(d, key);
-        printf("%s: %i\n", key, (int)hash);
+        int hash = (int)(d->hash_function)(d, key);
+        
         list *l = *(list **)array_get(d->array, hash);
         if (!l) {
             l = list_create();
@@ -104,7 +97,7 @@ int dictionary_set(dictionary *d, char *key, void *value, int element_size, void
 }
 
 void *dictionary_get(dictionary *d, char *key) {
-    int hash = (d->hash_function)(d, key);
+    int hash = (int)(d->hash_function)(d, key);
     
     list *l = *(list **)array_get(d->array, hash);
     
@@ -121,6 +114,7 @@ void *dictionary_get(dictionary *d, char *key) {
 }
 
 int dictionary_remove(dictionary *d, char *key) {
+    // UPDATE
     return 1;
 }
 
