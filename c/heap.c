@@ -1,4 +1,5 @@
 #include "heap.h"
+#include <stdlib.h>
 
 int heap_parent(int idx) {
     return ((idx + 1) >> 1) - 1;

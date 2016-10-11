@@ -1,4 +1,15 @@
 #include "array.h"
+#include <stdlib.h>
+#include <string.h>
+
+void byte_swap(char *s1, char *s2, int count) {
+    char tmp;
+    for (int i = 0; i < count; i++) {
+        tmp = s1[i];
+        s1[i] = s2[i];
+        s2[i] = tmp;
+    }
+}
 
 void array_zero(array *a, int start, int end) {
     char zero[a->element_size];

@@ -1,4 +1,5 @@
 #include "ring.h"
+#include <stdlib.h>
 
 int ring_operation(ring *r, void *item, int(*arr_op)(array*,int,void*), int *indexer, int count_change) {
     int result = 1;

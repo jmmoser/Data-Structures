@@ -1,8 +1,8 @@
 #include "dictionary.h"
 #include "list.h"
 #include <limits.h>
-
-#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 typedef struct dictionary_entry {
     char *key;
