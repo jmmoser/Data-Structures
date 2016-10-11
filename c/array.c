@@ -5,13 +5,14 @@ void array_zero(array *a, int start, int end) {
     for (int i = 0; i < a->element_size; i++) {
         zero[i] = 0;
     }
-    for (int i = start; i <= end; i++) {
-        array_set(a, i, zero);
+    for (int i = start; i < end; i++) {
+        memcpy(array_get(a, i), zero, a->element_size);
     }
 }
 
 array *array_create(int capacity, int element_size, void (*deallocator)(void *)) {
     array *a = malloc(sizeof(array));
+    a->data = 0;
     a->capacity = 0;
     a->element_size = element_size;
     a->deallocator = deallocator;
@@ -19,13 +20,16 @@ array *array_create(int capacity, int element_size, void (*deallocator)(void *))
     return a;
 }
 
+void array_item_free(array *a, void *item) {
+    if (*(int *)item != 0) {
+        a->deallocator(item);
+    }
+}
+
 void array_free(array *a) {
     if (a->deallocator) {
         for (int i = 0; i < a->capacity; i++) {
-            void *item = array_get(a, i);
-            if (item) {
-                a->deallocator(item);
-            }
+            array_item_free(a, array_get(a, i));
         }
     }
     free(a->data);
@@ -35,16 +39,16 @@ void array_free(array *a) {
 int array_resize(array *a, int capacity) {
     int initial_capacity = a->capacity;
     a->data = realloc(a->data, capacity * a->element_size);
-    array_zero(a, initial_capacity, capacity);
     a->capacity = capacity;
+    array_zero(a, initial_capacity, capacity);
     return a->data != 0;
 }
 
 int array_set(array *a, int index, void *item) {
     if (index < a->capacity) {
         void *dst = array_get(a, index);
-        if (a->deallocator && dst) {
-            a->deallocator(dst);
+        if (a->deallocator) {
+            array_item_free(a, dst);
         }
         memcpy(dst, item, a->element_size);
         return 1;
