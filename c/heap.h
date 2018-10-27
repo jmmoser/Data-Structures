@@ -1,6 +1,7 @@
 #ifndef heap_h
 #define heap_h
 
+#include "common.h"
 #include "array.h"
 
 /* Binary heap structure
@@ -14,7 +15,7 @@ typedef struct heap {
 /* For a min-heap the comparator should return 1 if item1 < item2 and -1 if item1 > item2.
  * For a max-heap the comparator should return 1 if item1 > item2 and -1 if item1 < item2.
  */
-heap *heap_create(int capacity, int element_size, int (*comparator)(void *item1,void *item2), void (*deallocator)(void *));
+heap *heap_create(int capacity, int element_size, int (*comparator)(void *item1,void *item2), deallocator dealloc);
 
 void heap_free(heap *h);
 

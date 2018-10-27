@@ -10,9 +10,9 @@ int ring_operation(ring *r, void *item, int(*arr_op)(array*,int,void*), int *ind
     return result;
 }
 
-ring *ring_create(int capacity, int element_size, void(*deallocator)(void *)) {
+ring *ring_create(int capacity, int element_size, deallocator dealloc) {
     ring *r = malloc(sizeof(ring));
-    r->arr = array_create(capacity, element_size, deallocator);
+    r->arr = array_create(capacity, element_size, dealloc);
     r->head = 0;
     r->tail = 0;
     r->count = 0;
@@ -37,5 +37,3 @@ int ring_pop(ring *r, void *item) {
     }
     return 0;
 }
-
-

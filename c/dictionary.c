@@ -7,23 +7,23 @@
 typedef struct dictionary_entry {
     char *key;
     int element_size;
-    void (*deallocator)(void *);
+    deallocator dealloc;
     void *value;
 } dictionary_entry;
 
-dictionary_entry *dictionary_entry_create(char *key, void *value, int element_size, void (*deallocator)(void *)) {
+dictionary_entry *dictionary_entry_create(char *key, void *value, int element_size, deallocator dealloc) {
     dictionary_entry *entry = malloc(sizeof(dictionary_entry));
     entry->key = strdup(key);
     entry->value = malloc(element_size);
     entry->element_size = element_size;
-    entry->deallocator = deallocator;
+    entry->dealloc = dealloc;
     memcpy(entry->value, value, element_size);
     return entry;
 }
 
 void dictionary_entry_free(dictionary_entry *entry) {
-    if (entry->deallocator && entry->value) {
-        entry->deallocator(entry->value);
+    if (entry->dealloc && entry->value) {
+        entry->dealloc(entry->value);
     }
     free(entry->key);
     free(entry->value);
@@ -35,13 +35,13 @@ void dictionary_entry_free(dictionary_entry *entry) {
  */
 int dictionary_default_hash_function(dictionary *d, char *key) {
     unsigned long int hash = 5381;
-    
+
     int c;
-    
+
     while ((c = *key++)) {
         hash = ((hash << 5) + hash) + c;
     }
-    
+
     return hash % d->array->capacity;
 }
 
@@ -65,18 +65,18 @@ void dictionary_free(dictionary *d) {
     free(d);
 }
 
-int dictionary_set(dictionary *d, char *key, void *value, int element_size, void(*deallocator)(void *)) {
+int dictionary_set(dictionary *d, char *key, void *value, int element_size, deallocator dealloc) {
     if (key) {
         int hash = (int)(d->hash_function)(d, key);
-        
+
         list *l = *(list **)array_get(d->array, hash);
         if (!l) {
             l = list_create();
             array_set(d->array, hash, &l);
         }
-        
+
         int index = -1;
-        
+
         for (list_iterator i = list_get_iterator(l, 0); i.index >= 0; list_iterator_next(&i)) {
             dictionary_entry *existing_entry = *(dictionary_entry **)i.value;
             if (strcmp(key, existing_entry->key) == 0) {
@@ -84,13 +84,13 @@ int dictionary_set(dictionary *d, char *key, void *value, int element_size, void
                 break;
             }
         }
-        
+
         if (index >= 0) {
             list_remove(l, index);
         }
-        
-        dictionary_entry *entry = dictionary_entry_create(key, value, element_size, deallocator);
-        
+
+        dictionary_entry *entry = dictionary_entry_create(key, value, element_size, dealloc);
+
         list_add(l, -1, &entry, sizeof(dictionary_entry *), dictionary_entry_deallocator);
     }
     return 0;
@@ -98,9 +98,9 @@ int dictionary_set(dictionary *d, char *key, void *value, int element_size, void
 
 void *dictionary_get(dictionary *d, char *key) {
     int hash = (int)(d->hash_function)(d, key);
-    
+
     list *l = *(list **)array_get(d->array, hash);
-    
+
     if (l) {
         for (list_iterator i = list_get_iterator(l, 0); i.index >= 0; list_iterator_next(&i)) {
             dictionary_entry *entry = *(dictionary_entry **)i.value;
@@ -109,7 +109,7 @@ void *dictionary_get(dictionary *d, char *key) {
             }
         }
     }
-    
+
     return 0;
 }
 
@@ -117,12 +117,12 @@ void *dictionary_get(dictionary *d, char *key) {
 
 int dictionary_remove(dictionary *d, char *key) {
     int hash = (int)(d->hash_function)(d, key);
-    
+
     list *l = *(list **)array_get(d->array, hash);
-    
+
     if (l) {
         int index = -1;
-        
+
         for (list_iterator i = list_get_iterator(l, 0); i.index >= 0; list_iterator_next(&i)) {
             dictionary_entry *entry = *(dictionary_entry **)i.value;
             if (strcmp(key, entry->key) == 0) {
@@ -130,12 +130,12 @@ int dictionary_remove(dictionary *d, char *key) {
                 break;
             }
         }
-        
+
         if (index >= 0) {
             return list_remove(l, index);
         }
     }
-    
+
     return 0;
 }
 

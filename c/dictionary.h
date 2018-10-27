@@ -1,6 +1,7 @@
 #ifndef dictionary_h
 #define dictionary_h
 
+#include "common.h"
 #include "array.h"
 
 /* Hash table structure
@@ -14,7 +15,7 @@ dictionary *dictionary_create(int size);
 
 void dictionary_free(dictionary *d);
 
-int dictionary_set(dictionary *d, char *key, void *value, int element_size, void(*deallocator)(void *));
+int dictionary_set(dictionary *d, char *key, void *value, int element_size, deallocator dealloc);
 
 void *dictionary_get(dictionary *d, char *key);
 

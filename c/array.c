@@ -21,24 +21,24 @@ void array_zero(array *a, int start, int end) {
     }
 }
 
-array *array_create(int capacity, int element_size, void (*deallocator)(void *)) {
+array *array_create(int capacity, int element_size, deallocator dealloc) {
     array *a = malloc(sizeof(array));
     a->data = 0;
     a->capacity = 0;
     a->element_size = element_size;
-    a->deallocator = deallocator;
+    a->dealloc = dealloc;
     array_resize(a, capacity);
     return a;
 }
 
 void array_item_free(array *a, void *item) {
     if (*(int *)item != 0) {
-        a->deallocator(item);
+        a->dealloc(item);
     }
 }
 
 void array_free(array *a) {
-    if (a->deallocator) {
+    if (a->dealloc) {
         for (int i = 0; i < a->capacity; i++) {
             array_item_free(a, array_get(a, i));
         }
@@ -58,7 +58,7 @@ int array_resize(array *a, int capacity) {
 int array_set(array *a, int index, void *item) {
     if (index < a->capacity) {
         void *dst = array_get(a, index);
-        if (a->deallocator) {
+        if (a->dealloc) {
             array_item_free(a, dst);
         }
         memcpy(dst, item, a->element_size);
@@ -70,7 +70,7 @@ int array_set(array *a, int index, void *item) {
 void *array_get(array *a, int index) {
     if (index < a->capacity)
         return a->data + index * a->element_size;
-    
+
     return 0;
 }
 
@@ -79,7 +79,7 @@ int array_copy_item(array *a, int index, void *item) {
         memcpy(item, array_get(a, index), a->element_size);
         return 1;
     }
-    
+
     return 0;
 }
 
