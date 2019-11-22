@@ -11,6 +11,7 @@ typedef struct dictionary_entry {
     void *value;
 } dictionary_entry;
 
+
 dictionary_entry *dictionary_entry_create(char *key, void *value, int element_size, deallocator dealloc) {
     dictionary_entry *entry = malloc(sizeof(dictionary_entry));
     entry->key = strdup(key);
@@ -20,6 +21,7 @@ dictionary_entry *dictionary_entry_create(char *key, void *value, int element_si
     memcpy(entry->value, value, element_size);
     return entry;
 }
+
 
 void dictionary_entry_free(dictionary_entry *entry) {
     if (entry->dealloc && entry->value) {
@@ -45,13 +47,16 @@ int dictionary_default_hash_function(dictionary *d, char *key) {
     return hash % d->array->capacity;
 }
 
+
 void dictionary_entry_deallocator(void *item) {
     dictionary_entry_free(*(dictionary_entry **)item);
 }
 
+
 void dictionary_array_deallocator(void *item) {
     list_free(*(list **)item);
 }
+
 
 dictionary *dictionary_create(int size) {
     dictionary *d = malloc(sizeof(dictionary));
@@ -60,10 +65,12 @@ dictionary *dictionary_create(int size) {
     return d;
 }
 
+
 void dictionary_free(dictionary *d) {
     array_free(d->array);
     free(d);
 }
+
 
 int dictionary_set(dictionary *d, char *key, void *value, int element_size, deallocator dealloc) {
     if (key) {
@@ -96,6 +103,7 @@ int dictionary_set(dictionary *d, char *key, void *value, int element_size, deal
     return 0;
 }
 
+
 void *dictionary_get(dictionary *d, char *key) {
     int hash = (int)(d->hash_function)(d, key);
 
@@ -112,7 +120,6 @@ void *dictionary_get(dictionary *d, char *key) {
 
     return 0;
 }
-
 
 
 int dictionary_remove(dictionary *d, char *key) {

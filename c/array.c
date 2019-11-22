@@ -11,13 +11,12 @@ void byte_swap(char *s1, char *s2, int count) {
     }
 }
 
-void array_zero(array *a, int start, int end) {
-    char zero[a->element_size];
-    for (int i = 0; i < a->element_size; i++) {
-        zero[i] = 0;
-    }
-    for (int i = start; i < end; i++) {
-        memcpy(array_get(a, i), zero, a->element_size);
+void array_zero(array *a, int lower, int upper) {
+    for (int i = lower; i < upper; i++) {
+        char *element = array_get(a, i);
+        for (int j = 0; j < a->element_size; j++) {
+            *(element + j) = 0;
+        }
     }
 }
 
@@ -69,7 +68,7 @@ int array_set(array *a, int index, void *item) {
 
 void *array_get(array *a, int index) {
     if (index < a->capacity)
-        return a->data + index * a->element_size;
+        return (char *)a->data + index * a->element_size;
 
     return 0;
 }
